@@ -6,8 +6,16 @@ authors = [
     {name = "Eugene Vuong",email = "vuongeugene@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<4.0"
 dependencies = [
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "livekit-api (>=1.0.7,<2.0.0)",
+    "livekit-plugins-tavus (>=1.2.15,<2.0.0)",
+    "livekit-agents (>=1.2.15,<2.0.0)",
+    "livekit (>=1.0.17,<2.0.0)",
+    "letta-client (>=0.1.324,<0.2.0)",
+    "livekit-plugins-deepgram (>=1.2.15,<2.0.0)",
+    "livekit-agents[openai] (>=1.2,<2.0)"
 ]
 
 [tool.poetry]
