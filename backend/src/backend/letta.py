@@ -91,7 +91,7 @@ class LettaLLMStream(llm.LLMStream):
         words = assistant_content.split() if assistant_content else []
 
         # Emit token-like deltas; base class metrics/TTFT handling mirrors LiveKit.
-        for i, w in enumerate[LiteralString](words):
+        for i, w in enumerate(words):
             chunk = llm.ChatChunk(
                 id=request_id,
                 delta=llm.ChoiceDelta(content=(w + (" " if i < len(words) - 1 else ""))),
