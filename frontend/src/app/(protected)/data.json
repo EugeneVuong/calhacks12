@@ -1,0 +1,371 @@
+[
+  {
+    "id": 1,
+    "header": "Self-Awareness Foundation",
+    "type": "Core Skill",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 2,
+    "header": "Emotional Regulation",
+    "type": "Core Skill",
+    "status": "Done",
+    "target": "Intermediate",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 3,
+    "header": "Empathy Development",
+    "type": "Core Skill",
+    "status": "In Process",
+    "target": "Advanced",
+    "limit": "4 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 4,
+    "header": "Social Skills Enhancement",
+    "type": "Core Skill",
+    "status": "In Process",
+    "target": "Intermediate",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 5,
+    "header": "Motivation & Goal Setting",
+    "type": "Core Skill",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 6,
+    "header": "Active Listening",
+    "type": "Communication",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "1 week",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 7,
+    "header": "Conflict Resolution",
+    "type": "Communication",
+    "status": "In Process",
+    "target": "Intermediate",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 8,
+    "header": "Non-Verbal Communication",
+    "type": "Communication",
+    "status": "Done",
+    "target": "Intermediate",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 9,
+    "header": "Assertiveness Training",
+    "type": "Communication",
+    "status": "In Process",
+    "target": "Advanced",
+    "limit": "4 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 10,
+    "header": "Stress Management",
+    "type": "Wellness",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 11,
+    "header": "Mindfulness Practice",
+    "type": "Wellness",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "1 week",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 12,
+    "header": "Resilience Building",
+    "type": "Wellness",
+    "status": "In Process",
+    "target": "Intermediate",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 13,
+    "header": "Time Management",
+    "type": "Productivity",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 14,
+    "header": "Decision Making",
+    "type": "Productivity",
+    "status": "In Process",
+    "target": "Advanced",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 15,
+    "header": "Problem Solving",
+    "type": "Productivity",
+    "status": "Done",
+    "target": "Intermediate",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 16,
+    "header": "Leadership Fundamentals",
+    "type": "Leadership",
+    "status": "In Process",
+    "target": "Intermediate",
+    "limit": "4 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 17,
+    "header": "Team Collaboration",
+    "type": "Leadership",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 18,
+    "header": "Influence & Persuasion",
+    "type": "Leadership",
+    "status": "In Process",
+    "target": "Advanced",
+    "limit": "4 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 19,
+    "header": "Cultural Intelligence",
+    "type": "Leadership",
+    "status": "Done",
+    "target": "Intermediate",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 20,
+    "header": "Adaptability",
+    "type": "Growth",
+    "status": "In Process",
+    "target": "Advanced",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 21,
+    "header": "Continuous Learning",
+    "type": "Growth",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 22,
+    "header": "Feedback Integration",
+    "type": "Growth",
+    "status": "In Process",
+    "target": "Intermediate",
+    "limit": "2 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 23,
+    "header": "Self-Reflection Practice",
+    "type": "Growth",
+    "status": "Done",
+    "target": "Advanced",
+    "limit": "1 week",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 24,
+    "header": "Boundary Setting",
+    "type": "Wellness",
+    "status": "In Process",
+    "target": "Intermediate",
+    "limit": "3 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 25,
+    "header": "Emotional Intelligence Assessment",
+    "type": "Assessment",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "1 day",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 26,
+    "header": "360-Degree Feedback",
+    "type": "Assessment",
+    "status": "In Process",
+    "target": "Complete",
+    "limit": "1 week",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 27,
+    "header": "Goal Achievement Review",
+    "type": "Assessment",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "2 days",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 28,
+    "header": "Progress Tracking Setup",
+    "type": "Assessment",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "1 day",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 29,
+    "header": "Weekly Check-ins",
+    "type": "Accountability",
+    "status": "In Process",
+    "target": "Ongoing",
+    "limit": "Weekly",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 30,
+    "header": "Monthly Reviews",
+    "type": "Accountability",
+    "status": "Done",
+    "target": "Ongoing",
+    "limit": "Monthly",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 31,
+    "header": "Intervention Triggers",
+    "type": "Accountability",
+    "status": "In Process",
+    "target": "Active",
+    "limit": "As needed",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 32,
+    "header": "Roadblock Analysis",
+    "type": "Accountability",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "2 days",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 33,
+    "header": "Skill Tree Mapping",
+    "type": "Planning",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "1 week",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 34,
+    "header": "Detour Planning",
+    "type": "Planning",
+    "status": "In Process",
+    "target": "Active",
+    "limit": "Ongoing",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 35,
+    "header": "Payment Streak Tracking",
+    "type": "Accountability",
+    "status": "Done",
+    "target": "Active",
+    "limit": "Daily",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 36,
+    "header": "Mentor Matching",
+    "type": "Support",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "1 week",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 37,
+    "header": "Coaching Session Scheduling",
+    "type": "Support",
+    "status": "In Process",
+    "target": "Ongoing",
+    "limit": "Weekly",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 38,
+    "header": "Resource Library Access",
+    "type": "Support",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "1 day",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 39,
+    "header": "Community Engagement",
+    "type": "Support",
+    "status": "In Process",
+    "target": "Active",
+    "limit": "Weekly",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 40,
+    "header": "Emergency Support Protocol",
+    "type": "Support",
+    "status": "Done",
+    "target": "Complete",
+    "limit": "1 day",
+    "reviewer": "Dr. Sarah Chen"
+  },
+  {
+    "id": 41,
+    "header": "Creative Problem Solving",
+    "type": "Growth",
+    "status": "In Process",
+    "target": "Advanced",
+    "limit": "4 weeks",
+    "reviewer": "Dr. Sarah Chen"
+  }
+]
