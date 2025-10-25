@@ -20,7 +20,6 @@ import dagre from "@dagrejs/dagre";
 import "@xyflow/react/dist/style.css";
 
 const position = { x: 0, y: 0 };
-const edgeType = "default";
 
 export const initialNodes: Node[] = [
   {
