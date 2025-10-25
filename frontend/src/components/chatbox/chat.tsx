@@ -168,7 +168,7 @@ const Chatbot = () => {
   );
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto">
+    <div className="flex h-full w-full flex-col overflow-y-auto">
       <Conversation className="flex-1 overflow-y-auto">
         <ConversationContent className="space-y-4">
           {messages.map((message) => (

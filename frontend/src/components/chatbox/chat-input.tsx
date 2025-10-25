@@ -214,6 +214,16 @@ export function NotionPromptForm({
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
               setText(e.target.value)
             }
+            onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                const value = text.trim();
+                if (!value || disabled) return;
+                onSend(value);
+                setText("");
+              }
+            }}
+            className="max-h-48 overflow-y-auto"
             disabled={disabled}
           />
           <InputGroupAddon align="block-start">

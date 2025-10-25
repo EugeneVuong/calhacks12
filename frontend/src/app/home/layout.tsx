@@ -33,7 +33,7 @@ export default function HomeLayout({
             minSize={20}
             className="h-full overflow-y-auto"
           >
-            <aside className="h-full flex flex-col overflow-y-auto">
+            <aside className="flex h-screen w-full">
               <Chatbot />
             </aside>
           </ResizablePanel>
