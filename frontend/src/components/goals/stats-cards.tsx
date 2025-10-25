@@ -42,7 +42,6 @@ function StatCard({ stat }: { stat: StatCardData }) {
         {stat.badgeText && (
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
               {stat.badgeShowValue ? `+${stat.value}` : stat.badgeText}
             </Badge>
           </CardAction>
@@ -53,7 +52,7 @@ function StatCard({ stat }: { stat: StatCardData }) {
       {!stat.customFooter && !stat.customContent && stat.highlightText && (
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            {stat.highlightText} <IconTrendingUp className="size-4" />
+            {stat.highlightText}
           </div>
           {stat.description && (
             <div className="text-muted-foreground">{stat.description}</div>
