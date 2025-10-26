@@ -42,9 +42,10 @@ export async function POST(request: NextRequest) {
       model: lettaCloud(), // Model configuration (LLM, temperature, etc.) is managed through your Letta agent
       providerOptions: {
         letta: {
-          agent: { id: PUBLIC_AGENT_ID },
+          agent: { id: agentId },
         },
       },
+      tools,
       prompt: prompt,
     });
 
