@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent, useMemo } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  useMemo,
+  useEffect,
+} from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +22,6 @@ import {
 } from "@tabler/icons-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
   Command,
   CommandEmpty,
@@ -129,15 +134,16 @@ const SAMPLE_DATA = {
     },
   ],
   models: [
+    // {
+    //   name: "Auto",
+    // },
     {
-      name: "Auto",
+      name: "Teacher Mode",
+      // badge: "Beta",
     },
     {
-      name: "Agent Mode",
-      badge: "Beta",
-    },
-    {
-      name: "Plan Mode",
+      name: "Mentor Mode",
+      // badge: "Beta",
     },
   ],
 };
@@ -159,12 +165,14 @@ function MentionableIcon({
   );
 }
 
-export function NotionPromptForm({
+export function ChatInput({
   onSend,
   disabled = false,
+  onModeChange,
 }: {
   onSend: (text: string) => void;
   disabled?: boolean;
+  onModeChange?: (mode: string) => void;
 }) {
   const [mentions, setMentions] = useState<string[]>([]);
   const [mentionPopoverOpen, setMentionPopoverOpen] = useState(false);
@@ -191,6 +199,21 @@ export function NotionPromptForm({
 
   const hasMentions = mentions.length > 0;
 
+  // Get placeholder text based on selected mode
+  const getPlaceholder = () => {
+    if (selectedModel.name === "Teacher Mode") {
+      return "What do you want to learn today?";
+    } else if (selectedModel.name === "Mentor Mode") {
+      return "What are going to be checking on today?";
+    }
+    return "Ask, search, or make anything...";
+  };
+
+  // Notify parent when mode changes or on mount
+  useEffect(() => {
+    onModeChange?.(selectedModel.name);
+  }, [selectedModel.name, onModeChange]);
+
   return (
     <form
       className="[--radius:1.2rem]"
@@ -209,7 +232,7 @@ export function NotionPromptForm({
         <InputGroup>
           <InputGroupTextarea
             id="notion-prompt"
-            placeholder="Ask, search, or make anything..."
+            placeholder={getPlaceholder()}
             value={text}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
               setText(e.target.value)
@@ -330,7 +353,7 @@ export function NotionPromptForm({
                     </InputGroupButton>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
-                <TooltipContent>Select AI model</TooltipContent>
+                <TooltipContent>Select Mode</TooltipContent>
               </Tooltip>
               <DropdownMenuContent
                 side="top"
@@ -339,7 +362,7 @@ export function NotionPromptForm({
               >
                 <DropdownMenuGroup className="w-42">
                   <DropdownMenuLabel className="text-muted-foreground text-xs">
-                    Select Agent Mode
+                    Select Mode
                   </DropdownMenuLabel>
                   {SAMPLE_DATA.models.map((model) => (
                     <DropdownMenuCheckboxItem
@@ -348,25 +371,18 @@ export function NotionPromptForm({
                       onCheckedChange={(checked) => {
                         if (checked) {
                           setSelectedModel(model);
+                          onModeChange?.(model.name);
                         }
                       }}
                       className="pl-2 *:[span:first-child]:right-2 *:[span:first-child]:left-auto"
                     >
                       {model.name}
-                      {model.badge && (
-                        <Badge
-                          variant="secondary"
-                          className="h-5 rounded-sm bg-blue-100 px-1 text-xs text-blue-800 dark:bg-blue-900 dark:text-blue-100"
-                        >
-                          {model.badge}
-                        </Badge>
-                      )}
                     </DropdownMenuCheckboxItem>
                   ))}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <DropdownMenu open={scopeMenuOpen} onOpenChange={setScopeMenuOpen}>
+            {/* <DropdownMenu open={scopeMenuOpen} onOpenChange={setScopeMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <InputGroupButton size="sm" className="rounded-full">
                   <IconWorld /> All Sources
@@ -465,7 +481,7 @@ export function NotionPromptForm({
                   </DropdownMenuLabel>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
             <InputGroupButton
               aria-label="Send"
               className="ml-auto rounded-full"

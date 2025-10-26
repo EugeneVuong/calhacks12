@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import { BarChart3, Target } from "lucide-react";
+import { BarChart3, Target, MessageCircle } from "lucide-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -27,17 +27,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const navMain = [
     {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: BarChart3,
-      isActive: pathname === "/dashboard",
+      title: "New Chat",
+      url: "/",
+      icon: MessageCircle,
+      isActive: pathname === "/",
     },
     {
-      title: "Goal",
-      url: "/goal",
-      icon: Target,
-      isActive: pathname === "/goal",
+      title: "Roadmaps",
+      url: "/roadmap",
+      icon: BarChart3,
+      isActive: pathname === "/roadmap",
     },
+    // {
+    //   title: "Goal",
+    //   url: "/goal",
+    //   icon: Target,
+    //   isActive: pathname === "/goal",
+    // },
   ];
 
   return (
@@ -45,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <div className="flex items-center justify-between">
           <h1 className="font-semibold text-lg group-data-[collapsible=icon]:hidden p-2">
-            Mentor
+            Mentora
           </h1>
           <SidebarTrigger className="h-8 w-8 p-2" />
         </div>

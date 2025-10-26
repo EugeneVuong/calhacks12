@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { RotateCcwIcon } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
-import { NotionPromptForm } from "./chat-input";
+import { ChatInput } from "./chat-input";
 
 type ChatMessage = {
   id: string;
@@ -56,134 +56,147 @@ const Chatbot = () => {
     null
   );
 
-  const sendToLettuce = useCallback(async (userMessage: string, messageHistory: ChatMessage[]) => {
-    try {
-      // Use the latest user message as the prompt
-      const prompt = userMessage;
+  const sendToLettuce = useCallback(
+    async (userMessage: string, messageHistory: ChatMessage[]) => {
+      try {
+        // Use the latest user message as the prompt
+        const prompt = userMessage;
 
-      const response = await fetch(API_BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: prompt,
-          agentId: "agent-afeee9a5-ad56-48e8-952b-dc8371a75ca4", // You'll need to replace this with your actual agent ID
-        }),
-      });
+        const response = await fetch(API_BASE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            agentId: "agent-afeee9a5-ad56-48e8-952b-dc8371a75ca4", // You'll need to replace this with your actual agent ID
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        return {
+          content: data.text,
+          usage: null, // Letta doesn't return usage info in this format
+        };
+      } catch (error) {
+        console.error("Error calling Letta API:", error);
+        throw error;
       }
+    },
+    []
+  );
 
-      const data = await response.json();
-      
-      if (data.error) {
-        throw new Error(data.error);
-      }
+  const streamFromLettuce = useCallback(
+    async (
+      userMessage: string,
+      messageHistory: ChatMessage[],
+      currentStreamingId: string
+    ) => {
+      try {
+        console.log("Starting stream from Letta...");
 
-      return {
-        content: data.text,
-        usage: null, // Letta doesn't return usage info in this format
-      };
-    } catch (error) {
-      console.error("Error calling Letta API:", error);
-      throw error;
-    }
-  }, []);
+        const response = await fetch(API_BASE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: userMessage,
+            agentId: "agent-afeee9a5-ad56-48e8-952b-dc8371a75ca4",
+          }),
+        });
 
-  const streamFromLettuce = useCallback(async (userMessage: string, messageHistory: ChatMessage[], currentStreamingId: string) => {
-    try {
-      console.log('Starting stream from Letta...');
-      
-      const response = await fetch(API_BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: userMessage,
-          agentId: "agent-afeee9a5-ad56-48e8-952b-dc8371a75ca4",
-        }),
-      });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error("No response body");
+        }
 
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error("No response body");
-      }
+        const decoder = new TextDecoder();
+        let fullContent = "";
 
-      const decoder = new TextDecoder();
-      let fullContent = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+          const chunk = decoder.decode(value);
+          const lines = chunk.split("\n");
 
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-        
-        for (const line of lines) {
-          if (line.trim() === '' || !line.startsWith('data: ')) continue;
-          
-          try {
-            const data = JSON.parse(line.slice(6)); // Remove 'data: ' prefix
-            
-            if (data.error) {
-              throw new Error(data.error);
+          for (const line of lines) {
+            if (line.trim() === "" || !line.startsWith("data: ")) continue;
+
+            try {
+              const data = JSON.parse(line.slice(6)); // Remove 'data: ' prefix
+
+              if (data.error) {
+                throw new Error(data.error);
+              }
+
+              if (data.content) {
+                fullContent += data.content;
+                console.log("Streaming content update:", {
+                  content: data.content,
+                  fullLength: fullContent.length,
+                });
+                // Update the streaming message
+                setMessages((prev) =>
+                  prev.map((msg) => {
+                    if (msg.id === currentStreamingId) {
+                      return {
+                        ...msg,
+                        content: fullContent,
+                        isStreaming: !data.done,
+                      };
+                    }
+                    return msg;
+                  })
+                );
+              }
+
+              if (data.done) {
+                setIsTyping(false);
+                setStreamingMessageId(null);
+                return { content: fullContent, usage: null };
+              }
+            } catch (e) {
+              console.warn("Failed to parse streaming data:", line, e);
+              continue;
             }
-            
-            if (data.content) {
-              fullContent += data.content;
-              console.log('Streaming content update:', { content: data.content, fullLength: fullContent.length });
-              // Update the streaming message
-              setMessages((prev) =>
-                prev.map((msg) => {
-                  if (msg.id === currentStreamingId) {
-                    return {
-                      ...msg,
-                      content: fullContent,
-                      isStreaming: !data.done,
-                    };
-                  }
-                  return msg;
-                })
-              );
-            }
-            
-            if (data.done) {
-              setIsTyping(false);
-              setStreamingMessageId(null);
-              return { content: fullContent, usage: null };
-            }
-          } catch (e) {
-            console.warn('Failed to parse streaming data:', line, e);
-            continue;
           }
         }
-      }
 
-      return { content: fullContent, usage: null };
-    } catch (error) {
-      console.error("Error streaming from Letta API:", error);
-      throw error;
-    }
-  }, []);
+        return { content: fullContent, usage: null };
+      } catch (error) {
+        console.error("Error streaming from Letta API:", error);
+        throw error;
+      }
+    },
+    []
+  );
 
   const handleSend = useCallback(
     async (value: string) => {
       if (!value.trim() || isTyping) return;
-      
+
       const userMessage: ChatMessage = {
         id: nanoid(),
         content: value.trim(),
         role: "user",
         timestamp: new Date(),
       };
-      
+
       setMessages((prev) => [...prev, userMessage]);
       setIsTyping(true);
 
@@ -196,16 +209,20 @@ const Chatbot = () => {
         timestamp: new Date(),
         isStreaming: true,
       };
-      
+
       setMessages((prev) => [...prev, assistantMessage]);
       setStreamingMessageId(assistantMessageId);
 
       try {
         console.log("Sending message to Letta:", value.trim());
         // Use streaming for real-time response
-        const result = await streamFromLettuce(value.trim(), [...messages, userMessage], assistantMessageId);
+        const result = await streamFromLettuce(
+          value.trim(),
+          [...messages, userMessage],
+          assistantMessageId
+        );
         console.log("Streaming completed from Letta:", result);
-        
+
         // Final update with complete content
         setMessages((prev) =>
           prev.map((msg) => {
@@ -227,7 +244,8 @@ const Chatbot = () => {
             if (msg.id === assistantMessageId) {
               return {
                 ...msg,
-                content: "I encountered an issue processing your request. This might be due to conflicting information or a temporary error. Please try again or rephrase your message.",
+                content:
+                  "I encountered an issue processing your request. This might be due to conflicting information or a temporary error. Please try again or rephrase your message.",
                 isStreaming: false,
                 error: error instanceof Error ? error.message : "Unknown error",
               };
@@ -275,7 +293,7 @@ const Chatbot = () => {
           Reset Chat
         </Button>
       </div>
-      
+
       <Conversation className="flex-1 overflow-y-auto">
         <ConversationContent className="space-y-4">
           {messages.map((message) => (
@@ -295,7 +313,9 @@ const Chatbot = () => {
                       {message.isStreaming && message.content && (
                         <div className="flex items-center gap-1">
                           <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                          <span className="text-xs text-muted-foreground">Streaming...</span>
+                          <span className="text-xs text-muted-foreground">
+                            Streaming...
+                          </span>
                         </div>
                       )}
                     </div>
@@ -309,7 +329,7 @@ const Chatbot = () => {
                         onClick={() => {
                           // Retry the last message
                           const lastUserMessage = messages
-                            .filter(m => m.role === "user")
+                            .filter((m) => m.role === "user")
                             .slice(-1)[0];
                           if (lastUserMessage) {
                             handleSend(lastUserMessage.content);
@@ -367,7 +387,7 @@ const Chatbot = () => {
       </Conversation>
       {/* Input Area */}
       <div className="p-4">
-        <NotionPromptForm onSend={handleSend} disabled={isTyping} />
+        <ChatInput onSend={handleSend} disabled={isTyping} />
       </div>
     </div>
   );

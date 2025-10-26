@@ -1,65 +1,112 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useCallback } from "react";
+import { ChatInput } from "@/components/chatbox/chat-input";
+import { generateRoadmap } from "@/lib/api";
+import {
+  createRoadmap,
+  updateRoadmap,
+  updateRoadmapError,
+  subscribeToRoadmap,
+} from "@/lib/roadmap-service";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
+  const [currentMode, setCurrentMode] = useState<string>("Teacher Mode");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSend = useCallback(
+    async (text: string) => {
+      if (!text.trim() || isLoading) return;
+
+      setIsLoading(true);
+      let roadmapId: string | null = null;
+
+      try {
+        // Create pending roadmap in Firebase
+        roadmapId = await createRoadmap(text);
+        toast.info("Generating your learning roadmap...", {
+          description:
+            "This may take a moment. You can navigate away and we'll notify you when it's ready.",
+        });
+
+        // Subscribe to roadmap changes to detect completion
+        const unsubscribe = subscribeToRoadmap(roadmapId, (roadmap) => {
+          if (roadmap?.status === "completed") {
+            toast.success("Roadmap ready!", {
+              description:
+                "Your learning roadmap has been generated successfully.",
+            });
+            unsubscribe();
+          } else if (roadmap?.status === "error") {
+            toast.error("Failed to generate roadmap", {
+              description: roadmap.error || "An error occurred",
+            });
+            unsubscribe();
+          }
+        });
+
+        // Call backend to generate roadmap
+        const result = await generateRoadmap(text);
+
+        // Update Firebase with generated data
+        await updateRoadmap(roadmapId, result.nodes, result.edges);
+
+        // Redirect to roadmap page
+        router.push(`/roadmap/${roadmapId}`);
+      } catch (error) {
+        console.error("Error generating roadmap:", error);
+
+        // Update Firebase with error status
+        if (roadmapId) {
+          await updateRoadmapError(
+            roadmapId,
+            error instanceof Error
+              ? error.message
+              : "Failed to generate roadmap"
+          );
+        }
+
+        toast.error("Failed to generate roadmap", {
+          description:
+            error instanceof Error
+              ? error.message
+              : "An error occurred while generating your roadmap",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading, router]
+  );
+
+  const handleModeChange = (mode: string) => {
+    setCurrentMode(mode);
+  };
+
+  const getTitle = () => {
+    if (currentMode === "Teacher Mode") {
+      return "Hello! What do you want to learn today?";
+    } else if (currentMode === "Mentor Mode") {
+      return "Hello! What are going to be checking on today?";
+    }
+    return "Hello! What do you want to learn today?";
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="flex flex-col items-center justify-center w-full max-w-3xl mx-auto min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">{getTitle()}</h1>
+      <div className="w-full relative">
+        <ChatInput onSend={handleSend} onModeChange={handleModeChange} />
+        {isLoading && (
+          <div className="absolute top-2 right-2">
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
