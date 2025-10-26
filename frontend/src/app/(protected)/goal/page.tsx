@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import data from "../data.json";
 import { Badge } from "@/components/ui/badge";
 import { GoalsStatsCards } from "@/components/goals";
@@ -14,7 +17,7 @@ interface Goal {
   reviewer: string;
 }
 
-function goalToCardData(goal: Goal): StatCardData {
+function goalToCardData(goal: Goal, onNavigate: () => void): StatCardData {
   return {
     title: goal.header,
     value: goal.type,
@@ -24,19 +27,29 @@ function goalToCardData(goal: Goal): StatCardData {
     description: `Limit: ${goal.limit} | Reviewed by: ${goal.reviewer}`,
     className:
       "hover:shadow-lg transition-shadow cursor-pointer group hover:border-primary/50",
+    customContent: (
+      <div onClick={onNavigate} className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
+        View skill tree →
+      </div>
+    ),
   };
 }
 
 export default function Page() {
+  const router = useRouter();
   const goals = data as Goal[];
 
   // Group goals by status
   const doneGoals = goals.filter((goal) => goal.status === "Done");
   const inProcessGoals = goals.filter((goal) => goal.status === "In Process");
 
-  // Convert goals to card data
-  const inProcessGoalCards = inProcessGoals.map(goalToCardData);
-  const doneGoalCards = doneGoals.map(goalToCardData);
+  // Convert goals to card data with navigation
+  const inProcessGoalCards = inProcessGoals.map((goal) =>
+    goalToCardData(goal, () => router.push(`/goal/${goal.id}`))
+  );
+  const doneGoalCards = doneGoals.map((goal) =>
+    goalToCardData(goal, () => router.push(`/goal/${goal.id}`))
+  );
 
   return (
     <div className="flex flex-1 flex-col h-full">

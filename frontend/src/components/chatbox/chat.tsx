@@ -45,7 +45,7 @@ const Chatbot = () => {
     {
       id: nanoid(),
       content:
-        "Hello! I'm your AI assistant powered by Letta. I can help you with questions, provide guidance, and have meaningful conversations. What would you like to know?",
+        "Hello! I'm Mentora, your AI assistant. I can help you with questions, provide guidance, and have meaningful conversations. What would you like to know?",
       role: "assistant",
       timestamp: new Date(),
     },
@@ -87,14 +87,14 @@ const Chatbot = () => {
         usage: null, // Letta doesn't return usage info in this format
       };
     } catch (error) {
-      console.error("Error calling Letta API:", error);
+      console.error("Error calling API:", error);
       throw error;
     }
   }, []);
 
   const streamFromLettuce = useCallback(async (userMessage: string, messageHistory: ChatMessage[], currentStreamingId: string) => {
     try {
-      console.log('Starting stream from Letta...');
+      console.log('Starting stream from API...');
       
       const response = await fetch(API_BASE_URL, {
         method: "POST",
@@ -168,7 +168,7 @@ const Chatbot = () => {
 
       return { content: fullContent, usage: null };
     } catch (error) {
-      console.error("Error streaming from Letta API:", error);
+      console.error("Error streaming from API:", error);
       throw error;
     }
   }, []);
@@ -201,10 +201,10 @@ const Chatbot = () => {
       setStreamingMessageId(assistantMessageId);
 
       try {
-        console.log("Sending message to Letta:", value.trim());
+        console.log("Sending message to API:", value.trim());
         // Use streaming for real-time response
         const result = await streamFromLettuce(value.trim(), [...messages, userMessage], assistantMessageId);
-        console.log("Streaming completed from Letta:", result);
+        console.log("Streaming completed from API:", result);
         
         // Final update with complete content
         setMessages((prev) =>
@@ -252,7 +252,7 @@ const Chatbot = () => {
       {
         id: nanoid(),
         content:
-          "Hello! I'm your AI assistant powered by Letta. I can help you with questions, provide guidance, and have meaningful conversations. What would you like to know?",
+          "Hello! I'm Mentora, your AI assistant. I can help you with questions, provide guidance, and have meaningful conversations. What would you like to know?",
         role: "assistant",
         timestamp: new Date(),
       },
@@ -264,7 +264,7 @@ const Chatbot = () => {
   return (
     <div className="flex h-full w-full flex-col overflow-y-auto">
       <div className="flex items-center justify-between p-4 border-b">
-        <h1 className="text-lg font-semibold">Letta AI Assistant</h1>
+        <h1 className="text-lg font-semibold">Mentora</h1>
         <Button
           variant="outline"
           size="sm"
@@ -328,7 +328,7 @@ const Chatbot = () => {
                       ? "https://github.com/dovazencot.png"
                       : "https://github.com/vercel.png"
                   }
-                  name={message.role === "user" ? "User" : "Letta AI"}
+                  name={message.role === "user" ? "User" : "Mentora"}
                 />
               </Message>
               {/* Reasoning */}
