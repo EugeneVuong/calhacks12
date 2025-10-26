@@ -14,6 +14,7 @@ import {
   Connection,
   Position,
   ReactFlowProvider,
+  useReactFlow,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
 
@@ -157,7 +158,7 @@ const getLayoutedElements = (
 function FlowComponent() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const reactFlowInstance = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const { fitView } = useReactFlow();
 
   const onConnect = useCallback(
     (params: Connection) =>
@@ -177,10 +178,10 @@ function FlowComponent() {
 
       // Fit view after layout changes
       setTimeout(() => {
-        reactFlowInstance.current?.fitView({ padding: 0.2 });
+        fitView({ padding: 0.2 });
       }, 0);
     },
-    [nodes, edges, setNodes, setEdges]
+    [nodes, edges, setNodes, setEdges, fitView]
   );
 
   // Apply initial layout
@@ -194,9 +195,9 @@ function FlowComponent() {
 
     // Fit view after initial layout
     setTimeout(() => {
-      reactFlowInstance.current?.fitView({ padding: 0.2 });
+      fitView({ padding: 0.2 });
     }, 100);
-  }, [setNodes, setEdges]);
+  }, [setNodes, setEdges, fitView]);
 
   return (
     <div className="h-screen w-full">
@@ -207,7 +208,6 @@ function FlowComponent() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         connectionLineType={ConnectionLineType.Bezier}
-        ref={reactFlowInstance}
         fitView
         fitViewOptions={{ padding: 0.2, includeHiddenNodes: false }}
         defaultEdgeOptions={{ markerEnd: { type: "arrowclosed" } }}
