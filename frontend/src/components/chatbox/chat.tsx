@@ -24,7 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { RotateCcwIcon } from "lucide-react";
 import { nanoid } from "nanoid";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { NotionPromptForm } from "./chat-input";
 
 type ChatMessage = {
@@ -41,15 +41,20 @@ type ChatMessage = {
 const API_BASE_URL = "/api/letta";
 
 const Chatbot = () => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: nanoid(),
-      content:
-        "Hello! I'm Mentora, your AI assistant. I can help you with questions, provide guidance, and have meaningful conversations. What would you like to know?",
-      role: "assistant",
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  
+  // Initialize welcome message on client side only to avoid hydration mismatch
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages([{
+        id: nanoid(),
+        content:
+          "Hello! I'm Mentora, your AI assistant. I can help you with questions, provide guidance, and have meaningful conversations. What would you like to know?",
+        role: "assistant",
+        timestamp: new Date(),
+      }]);
+    }
+  }, []);
 
   const [isTyping, setIsTyping] = useState(false);
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
